@@ -13,8 +13,8 @@ jobs:
           echo "Próximo hito: Integración con Google Drive API" >> status.txt
           # Usa un servicio de email como SendGrid o SMTP
           curl --ssl-reqd \
-            --url "smtp://smtp.gmail.com:587" \
-            --user "TU_CORREO@gmail.com:TU_CONTRASEÑA" \
-            --mail-from "TU_CORREO@gmail.com" \
-            --mail-rcpt "iamoctimusengo@gmail.com" \
-            --upload-file status.txt
+               --url "smtp://smtp.gmail.com:587" \
+               --user "${{ secrets.EMAIL_USER }}:${{ secrets.EMAIL_PASSWORD }}" \
+               --mail-from "${{ secrets.EMAIL_USER }}" \
+               --mail-rcpt "iamoctimusengo@gmail.com" \
+               --upload-file status.txt
