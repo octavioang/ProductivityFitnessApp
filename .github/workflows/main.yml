@@ -8,6 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Generar reporte
+        run: | 
+              echo "Fecha: $(date +'%d/%m/%Y %H:%M')" >> report.txt
+              echo "Progreso del día:" >> report.txt
+              echo "- Detección de flexiones: 75% completado" >> report.txt
+            
+      - name: Enviar el correo
         env:
             EMAIL_USER: ${{ secrets.EMAIL_USER }}
             EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
