@@ -2,6 +2,7 @@ name: Daily Status Report
 on:
   schedule:
     - cron: '0 21 * * *'  # 21:00 UTC (23:00 hora España en verano)
+  workflow_dispatch:  # Permite ejecución manual
 jobs:
   notify:
     runs-on: ubuntu-latest
