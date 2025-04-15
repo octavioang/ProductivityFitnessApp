@@ -8,20 +8,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Generar reporte
-        run: |
-          echo "Fecha: $(date +'%d/%m/%Y %H:%M')" >> report.txt
-          echo "Progreso del día:" >> report.txt
-          echo "- Detección de flexiones: 75% completado" >> report.txt
-          echo "- Integración Google Drive: Pendiente" >> report.txt
-          echo "Próximo hito: Diseño de UI para menú de comidas." >> report.txt
-      - name: Enviar correo
         env:
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+            EMAIL_USER: ${{ secrets.EMAIL_USER }}
+            EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: |
-          curl --ssl-reqd \
-            --url "smtp://smtp.gmail.com:587" \
-            --user "$EMAIL_USER:$EMAIL_PASSWORD" \
-            --mail-from "$EMAIL_USER" \
-            --mail-rcpt "iamoctimusengo@gmail.com" \
-            --upload-file report.txt
+              # Crear archivo con encabezados y cuerpo
+              echo "Subject: [Daily Report] Estado del Proyecto $(date +'%d/%m/%Y')" > message.txt
+              echo "From: $EMAIL_USER" >> message.txt
+              echo "To: iamoctimusengo@gmail.com" >> message.txt
+              echo "Content-Type: text/plain; charset=UTF-8" >> message.txt
+              echo "" >> message.txt  # Línea vacía para separar encabezados y cuerpo
+              cat report.txt >> message.txt
+          
+              # Enviar el correo
+              curl --ssl-reqd \
+                --url "smtps://smtp.gmail.com:465" \
+                --user "$EMAIL_USER:$EMAIL_PASSWORD" \
+                --mail-from "$EMAIL_USER" \
+                --mail-rcpt "iamoctimusengo@gmail.com" \
+                --upload-file message.txt
