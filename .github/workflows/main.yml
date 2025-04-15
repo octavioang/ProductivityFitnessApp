@@ -1,20 +1,26 @@
-name: Hourly Status Report
+name: Daily Status Report
 on:
   schedule:
-    - cron: '0 * * * *'  # Se ejecuta cada hora
+    - cron: '0 21 * * *'  # 21:00 UTC (23:00 hora España en verano)
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Enviar correo
+      - name: Generar reporte
         run: |
-          echo "Hora: $(date)" >> status.txt
-          echo "Tareas completadas: Detección de flexiones (50%)" >> status.txt
-          echo "Próximo hito: Integración con Google Drive API" >> status.txt
-          # Usa un servicio de email como SendGrid o SMTP
+          echo "Fecha: $(date +'%d/%m/%Y %H:%M')" >> report.txt
+          echo "Progreso del día:" >> report.txt
+          echo "- Detección de flexiones: 75% completado" >> report.txt
+          echo "- Integración Google Drive: Pendiente" >> report.txt
+          echo "Próximo hito: Diseño de UI para menú de comidas." >> report.txt
+      - name: Enviar correo
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        run: |
           curl --ssl-reqd \
-               --url "smtp://smtp.gmail.com:587" \
-               --user "${{ secrets.EMAIL_USER }}:${{ secrets.EMAIL_PASSWORD }}" \
-               --mail-from "${{ secrets.EMAIL_USER }}" \
-               --mail-rcpt "iamoctimusengo@gmail.com" \
-               --upload-file status.txt
+            --url "smtp://smtp.gmail.com:587" \
+            --user "$EMAIL_USER:$EMAIL_PASSWORD" \
+            --mail-from "$EMAIL_USER" \
+            --mail-rcpt "iamoctimusengo@gmail.com" \
+            --upload-file report.txt
