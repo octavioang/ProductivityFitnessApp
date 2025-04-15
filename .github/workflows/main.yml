@@ -1,0 +1,20 @@
+name: Hourly Status Report
+on:
+  schedule:
+    - cron: '0 * * * *'  # Se ejecuta cada hora
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enviar correo
+        run: |
+          echo "Hora: $(date)" >> status.txt
+          echo "Tareas completadas: Detección de flexiones (50%)" >> status.txt
+          echo "Próximo hito: Integración con Google Drive API" >> status.txt
+          # Usa un servicio de email como SendGrid o SMTP
+          curl --ssl-reqd \
+            --url "smtp://smtp.gmail.com:587" \
+            --user "TU_CORREO@gmail.com:TU_CONTRASEÑA" \
+            --mail-from "TU_CORREO@gmail.com" \
+            --mail-rcpt "iamoctimusengo@gmail.com" \
+            --upload-file status.txt
