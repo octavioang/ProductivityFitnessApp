@@ -9,9 +9,14 @@ jobs:
     steps:
       - name: Generar reporte
         run: | 
-              echo "Fecha: $(date +'%d/%m/%Y %H:%M')" >> report.txt
-              echo "Progreso del día:" >> report.txt
-              echo "- Detección de flexiones: 75% completado" >> report.txt
+              # Obtener datos dinámicos
+              LAST_COMMIT=$(git log -1 --pretty='%h - %s')
+              CLOSED_ISSUES=$(curl -s "https://api.github.com/repos/octavioang/ProductivityFitnessApp/issues?state=closed" | jq '. | length')
+    
+              # Crear reporte
+              echo "📅 Fecha: $(date +'%d/%m/%Y')" > report.txt
+              echo "🔄 Último commit: $LAST_COMMIT" >> report.txt
+              echo "✅ Issues cerrados: $CLOSED_ISSUES" >> report.txt
             
       - name: Enviar el correo
         env:
